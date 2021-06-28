@@ -1,41 +1,48 @@
 const {response} = require('express')
+const Usuario = require('../models/usuario')
 
-const usuariosGet = (req, res)=> {
-    const query = req.query
-    
+const usuariosGet = async (req, res)=> {
+    // const query = req.query
+    const usuarios = await Usuario.find();
     res.json({
         ok: true,
         msg:'GET -controlador ',
-        query
+        usuarios
     })
 }
 
-const usaurioPost = (req, res)=> {
-    const {nombre,edad} = req.body
-
-    
+const usaurioPost = async (req, res)=> {
+    const body = req.body
+    const usuario = new Usuario(body)
+    await usuario.save();
     res.json({
         ok: true,
         msg:'POST',
-        nombre,
-        edad
+        usuario
     })
 }
 
-const usuarioPut = (req, res)=> {
+const usuarioPut = async(req, res)=> {
     
     const id = req.params.id;
+    const body=req.body
+    const usuario = await Usuario.findByIdAndUpdate(id,body)
+
     res.json({
         ok: true,
         msg:'PUT',
-        id
+        usuario
     })
 }
 
-const usuarioDelete =  (req, res)=> {
+const usuarioDelete =  async (req, res)=> {
+    const id = req.params.id;
+
+    const usuario = await Usuario.findByIdAndDelete(id)
     res.json({
         ok: true,
-        msg:'DELETE'
+        msg:'DELETE',
+        id
     })
 }
 
